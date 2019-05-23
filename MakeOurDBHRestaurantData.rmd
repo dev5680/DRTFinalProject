@@ -1,0 +1,189 @@
+---
+#title: "MakeOurDBHRestaurantData.rmd"
+#author: "Richard Paterson"
+#date: "May 22, 2019"
+#course: IST 718 Big Data Analytics Final Project
+---
+
+```{r setup, include=TRUE}
+
+knitr::opts_chunk$set(echo = FALSE)
+
+library(RCurl)
+#install.packages("jsonlite")
+library(jsonlite)
+## ONCE: install.packages("wordcloud")
+#library(wordcloud)
+#install.packages('tm')
+#library(tm)
+#install.packages("SnowballC")
+#library(SnowballC)
+## ONCE: install.packages("slam")
+#library(slam)
+#library(cluster)
+#library(rsq, quietly=T)
+#library(plyr, quietly=T)
+library(plyr, quietly=T)
+library(tidyr, quietly = T)
+#library(sqldf, quietly=T)
+#library(ggplot2, quietly=T)
+#library(stats, quietly=T)
+library(reshape2, quietly=T)
+#library(RWeka, quietly=T)
+#install.packages("partykit") #once only
+#library(partykit)
+#using numerically converted attributes (sans churn column)
+#install.packages("factoextra")
+#library(factoextra)
+#install.packages("stringr") # once only
+library(stringr)
+#library(stringi, quietly=T)
+#e1071 for svm
+#install.packages("e1071")
+#library(e1071)
+# for randomFOrest
+#library(randomForest)
+# https://www.rdocumentation.org/packages/kernlab/versions/0.9-27/topics/ksvm
+#library(kernlab, quietly=T) #ksvm
+
+```
+
+# Load the DBH NV and AC Restaurants data and concatenate into 1 dataset
+
+```{r loaddata}
+
+###########
+#   M A I N 
+#   M A I N
+#   M A I N
+###########
+
+cat ('yelp: setup vars and read in data')
+
+setwd('C:/Users/Richpat/Documents/@syracuse coursework/@IST 718 Big Data Analytics (Python)/finalproject')
+
+DBHNVMed1="DBHNevada164RestaurantsMediumRisk.csv"
+DBHNVMed1DF<-read.csv(DBHNVMed1, sep=",", na.string=c(""))
+DBHNVMed1DF$Source='MediumRisk'
+#str(DBHNVMed1DF)
+#summary(DBHNVMed1DF)
+
+DBHNVHigh1="DBHNevada164RestaurantsHighRisk.csv"
+DBHNVHigh1DF<-read.csv(DBHNVHigh1, sep=",", na.string=c(""))
+DBHNVHigh1DF$Source='HighRisk'
+#str(DBHNVHigh1DF)
+#summary(DBHNVHigh1DF)
+
+DBHNVLow1="DBHNevada164RestaurantsLowRisk.csv"
+DBHNVLow1DF<-read.csv(DBHNVLow1, sep=",", na.string=c(""))
+DBHNVLow1DF$Source='LowRisk'
+#str(DBHNVLow1DF)
+#summary(DBHNVLow1DF)
+
+DBHNVNA1="DBHNevada164RestaurantsNARisk.csv"
+DBHNVNA1DF<-read.csv(DBHNVNA1, sep=",", na.string=c(""))
+DBHNVNA1DF$Source='NARisk'
+#str(DBHNVNA1DF)
+#summary(DBHNVNA1DF)
+
+DBHAZMed1="DBHArizona164RestaurantsMediumLT7.csv"
+DBHAZMed1DF<-read.csv(DBHAZMed1, sep=",", na.string=c(""))
+DBHAZMed1DF$Source='MediumRisk'
+#str(DBHAZMed1DF)
+#summary(DBHAZMed1DF)
+
+DBHAZMed2="DBHArizona164RestaurantsMediumGT6.csv"
+DBHAZMed2DF<-read.csv(DBHAZMed2, sep=",", na.string=c(""))
+DBHAZMed2DF$Source='MediumRisk'
+#str(DBHAZMed2DF)
+#summary(DBHAZMed2DF)
+
+DBHAZHigh1="DBHArizona164RestaurantsHighRisk.csv"
+DBHAZHigh1DF<-read.csv(DBHAZHigh1, sep=",", na.string=c(""))
+DBHAZHigh1DF$Source='HighRisk'
+#str(DBHAZHigh1DF)
+#summary(DBHAZHigh1DF)
+
+DBHAZLow1="DBHArizona164RestaurantsLowLT10.csv"
+DBHAZLow1DF<-read.csv(DBHAZLow1, sep=",", na.string=c(""))
+DBHAZLow1DF$Source='LowRisk'
+#str(DBHAZLow1DF)
+#summary(DBHAZLow1DF)
+
+DBHAZLow2="DBHArizona164RestaurantsLowGT9.csv"
+DBHAZLow2DF<-read.csv(DBHAZLow2, sep=",", na.string=c(""))
+DBHAZLow2DF$Source='LowRisk'
+#str(DBHAZLow2DF)
+#summary(DBHAZLow2DF)
+
+DBHAZNA1="DBHArizona164RestaurantsNARisk.csv"
+DBHAZNA1DF<-read.csv(DBHAZNA1, sep=",", na.string=c(""))
+DBHAZNA1DF$Source='NARisk'
+#str(DBHAZNA1DF)
+#summary(DBHAZNA1DF)
+
+
+cat ('Number of ', DBHNVHigh1, ' records in DBHoovers dataset :\t', length(DBHNVHigh1DF[,1]),'\r\n')
+cat ('Number of ', DBHNVMed1, ' records in DBHoovers dataset :\t', length(DBHNVMed1DF[,1]),'\r\n')
+cat ('Number of ', DBHNVLow1, ' records in DBHoovers dataset :\t', length(DBHNVLow1DF[,1]),'\r\n')
+cat ('Number of ', DBHNVNA1, ' records in DBHoovers dataset :\t', length(DBHNVNA1DF[,1]),'\r\n')
+cat ('Number of ', DBHAZHigh1, ' records in DBHoovers dataset :\t', length(DBHAZHigh1DF[,1]),'\r\n')
+cat ('Number of ', DBHAZMed1, ' records in DBHoovers dataset :\t', length(DBHAZMed1DF[,1]),'\r\n')
+cat ('Number of ', DBHAZMed2, ' records in DBHoovers dataset :\t', length(DBHAZMed2DF[,1]),'\r\n')
+cat ('Number of ', DBHAZLow1, ' records in DBHoovers dataset :\t', length(DBHAZLow1DF[,1]),'\r\n')
+cat ('Number of ', DBHAZLow2, ' records in DBHoovers dataset :\t', length(DBHAZLow2DF[,1]),'\r\n')
+cat ('Number of ', DBHAZNA1, ' records in DBHoovers dataset :\t', length(DBHAZNA1DF[,1]),'\r\n')
+
+DBHNVDF<-rbind(DBHNVHigh1DF, DBHNVMed1DF)
+DBHNVDF<-rbind(DBHNVDF, DBHNVLow1DF)
+DBHNVDF<-rbind(DBHNVDF, DBHNVNA1DF)
+DBHAZDF<-rbind(DBHAZHigh1DF, DBHAZMed1DF)
+DBHAZDF<-rbind(DBHAZDF, DBHAZMed2DF)
+DBHAZDF<-rbind(DBHAZDF, DBHAZLow1DF)
+DBHAZDF<-rbind(DBHAZDF, DBHAZLow2DF)
+DBHAZDF<-rbind(DBHAZDF, DBHAZNA1DF)
+
+cat ('Number of Arizona records in DBHoovers dataset :\t', length(DBHAZDF[,1]),'\r\n')
+cat ('Number of Nevada records in DBHoovers dataset :\t', length(DBHNVDF[,1]),'\r\n')
+
+DBHDF<-rbind(DBHAZDF, DBHNVDF)
+
+cat ('Number of selected records in DBHoovers dataset :\t', length(DBHDF[,1]),'\r\n')
+
+write.csv(DBHDF, "DBHRestaurants.csv")
+
+
+```
+
+
+Step : Look at the data (and persist)
+
+```{r firstlook}
+
+cat ('Step : First look at data - structure\r\n\n')
+
+str(DBHDF)
+
+cat ('Step : First look at data - summary\r\n\n')
+
+summary(DBHDF)
+
+cat('----count how many NAs there are per column \r\n')
+colSums(is.na(DBHDF))
+
+
+```
+```{r}
+cat ("\nGrouping code Initial Credit Risk")
+table (DBHDF$Source, DBHDF$State)
+cat ("\nGrouping code Entity.Type")
+table (DBHDF$Entity.Type, DBHDF$State)
+cat ("\nGrouping code NAICS.2017.Description")
+table (DBHDF$NAICS.2017.Description,  DBHDF$State)
+#table (DBHDF$Parent.Company,  DBHDF$State) #remove independents and singles from this list (MAYBE BRANCHES as well?)
+cat ("\nGrouping code US.SIC.1987.Description")
+table (DBHDF$US.SIC.1987.Description,  DBHDF$State)
+```
+
+
+THE END
