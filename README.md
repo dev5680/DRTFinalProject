@@ -10,4 +10,4 @@ IST718 Final Project for D &amp; R &amp; T
 ## Complete
 - [x] Create Our Yelp Business csv from business.json
 - [x] Create Our Yelp Reviews csv from review.json and OurYelpBusiness.csv
-- [x] Create Our DBH Restaurants csv source files download from DBH
+- [x] Create Our DBH Restaurants csv from source files downloaded from DBH
