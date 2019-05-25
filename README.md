@@ -6,6 +6,7 @@ IST718 Final Project for D &amp; R &amp; T
 - [ ] Project checkpoint 2
 - [ ] Create Our Yelp Tips csv from tips.json
 - [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
+- [ ] Create SVM and Bernolli model and Save it in Pickle object to be used to predicting Reviews sentiment and authenticity
 ## ToDo
 - [ ] Create Our Yelp Photo csv from photo.json
 - [ ] Create Our Yelp Checkin csv from checkin.json
