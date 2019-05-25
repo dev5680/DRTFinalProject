@@ -14,4 +14,4 @@ IST718 Final Project for D &amp; R &amp; T
 - [x] Create Our Yelp Business csv from business.json
 - [x] Create Our Yelp Reviews csv from review.json and OurYelpBusiness.csv
 - [x] Create Our DBH Restaurants csv from source files downloaded from DBH
-- [x] Create SVM and Bernolli model and Save it in Pickle object to be used to predicting Reviews sentiment and authenticity
+- [x] Create SVM and Bernolli model and Save it in Pickle object to be used for predicting Reviews sentiment and its authenticity
