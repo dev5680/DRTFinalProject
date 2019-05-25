@@ -20,14 +20,10 @@ IST718 Final Project for D &amp; R &amp; T
 - [ ] Modeling
 - [ ] Reporting
 
-- [ ] Peer Review
-- [ ] Rich
-- [ ] Deb
-- [ ] Tj
        
 - [ ] Presentation slides: Ppt
 ## Complete
-- [ ] Submitted document
+- [X] Submitted document
 * [Project checkpoint 1](https://github.com/richpatanalytics/DRTFinalProject/blob/master/b.2.1_41473_project_checkpoint_1_clean.pdf)
 * [Project checkpoint 2](https://github.com/richpatanalytics/DRTFinalProject/blob/master/b.4.1_41474_project_checkpoint_2_clean.pdf)
        
@@ -55,9 +51,9 @@ IST718 Final Project for D &amp; R &amp; T
 * [notebook for creating svm and Bernolli model for sentiment and authenticity](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DRT_Reviews_Model_SVM_BNB.ipynb)
 * [SVM pickle model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/SVM-model-for-sentiment-classification-in-reviews.sav)
       
-* [Vectorizer for SVM model, pickle object](https://github.com/richpatanalytics/DRTFinalProject/blob/master/SVM-model-for-sentiment-classification-in-review-vectorizer.sav)
+* [Vectorizer for SVM model pickle object](https://github.com/richpatanalytics/DRTFinalProject/blob/master/SVM-model-for-sentiment-classification-in-review-vectorizer.sav)
       
 * [Bernolli pickle model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-reviews.sav)
       
-* [vectorizer for bernollimodel](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-review-vectorizer.sav)
+* [Vectorizer for bernolli model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-review-vectorizer.sav)
       
