@@ -13,14 +13,8 @@ IST718 Final Project for D &amp; R &amp; T
 - [ ] Check for possible integration of restaurant revenue information to our base data
 - [ ] Merge all yelp csv data into a single csv using their unique identifier. The final csv will  be used for EDA and Modeling
 - [ ] EDA
-- [ ] Understanding the spatial distribution effect: Location Advantage 
-- [ ] Effect of location on yelp reviews sentiment and authenticity based on categories
-- [ ] Relationship and correlation between all variables
-       
 - [ ] Modeling
-- [ ] Reporting
-
-       
+- [ ] Reporting     
 - [ ] Presentation slides: Ppt
 ## Complete
 - [X] Submitted document
