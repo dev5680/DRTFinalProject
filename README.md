@@ -3,7 +3,6 @@ IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
 - [ ] Create Our Yelp User csv from review.json
-- [ ] Project checkpoint 2
 - [ ] Create Our Yelp Tips csv from tips.json
 - [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
 
@@ -22,24 +21,25 @@ IST718 Final Project for D &amp; R &amp; T
 * [Checkpoint 2: word doc](https://github.com/richpatanalytics/DRTFinalProject/blob/master/Paterson_.Week7ProjectCheckIn.docx)
        
 - [x] Understanding yelp data
-
-*  [notebook for initial exploration](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DescribeYelpData.ipynb)
+* [notebook for initial exploration](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DescribeYelpData.ipynb)
       
 - [x] Create Our Yelp Business csv from business.json
-
-*  [yelp business csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/ouryelpbusinesses.csv)
-      
+* [yelp business csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/ouryelpbusinesses.csv)
 * [notebook for creating business csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpBusinesses.ipynb)
        
 - [x] Create Our Yelp Reviews csv from review.json and OurYelpBusiness.csv
-
+* [Our Yelp Reviews csv is in Watson]
 * [notebook for making yelp review csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpReviews.ipynb)
        
-- [x] Create Our DBH Restaurants csv from source files downloaded from DBH
+- [x] Create Our IRS2016 by zip from source files downloaded from IRS website
+* [IRS2016 Adjusted Gross Income csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/ourIRS2016byzip.csv)
+* [notebook for creating IRS2016 AGI By Zip](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurIRS2016Data.ipynb)
+* [Data Dictionary for IRS2016 AGI Source Data Zip](https://github.com/richpatanalytics/DRTFinalProject/blob/master/16zpdoc.doc)
+* [IRS2016 AGI Source Data Zip](https://github.com/richpatanalytics/DRTFinalProject/blob/master/16zpallnoagi.csv)
 
-* [Source code](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurDBHRestaurantData.rmd)
-       
+- [x] Create Our DBH Restaurants csv from source files downloaded from DBH
 * [DBH Restaurants csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DBHRestaurants.csv)
+* [Source code](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurDBHRestaurantData.rmd)  
        
 - [x] Create SVM and Bernolli model and Save it in Pickle object to be used for predicting Reviews sentiment and its authenticity
 * [notebook for creating svm and Bernolli model for sentiment and authenticity](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DRT_Reviews_Model_SVM_BNB.ipynb)
@@ -50,4 +50,3 @@ IST718 Final Project for D &amp; R &amp; T
 * [Bernolli pickle model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-reviews.sav)
       
 * [Vectorizer for bernolli model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-review-vectorizer.sav)
-      
