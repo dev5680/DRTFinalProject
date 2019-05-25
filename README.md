@@ -17,9 +17,9 @@ IST718 Final Project for D &amp; R &amp; T
 - [ ] Reporting     
 - [ ] Presentation slides: Ppt
 ## Complete
-- [X] Submitted document
-* [Project checkpoint 1](https://github.com/richpatanalytics/DRTFinalProject/blob/master/b.2.1_41473_project_checkpoint_1_clean.pdf)
-* [Project checkpoint 2](https://github.com/richpatanalytics/DRTFinalProject/blob/master/b.4.1_41474_project_checkpoint_2_clean.pdf)
+- [X] Project Checkpoint
+* [Checkpoint 1](https://github.com/richpatanalytics/DRTFinalProject/blob/master/b.2.1_41473_project_checkpoint_1_clean.pdf)
+* [Checkpoint 2](https://github.com/richpatanalytics/DRTFinalProject/blob/master/b.4.1_41474_project_checkpoint_2_clean.pdf)
        
 - [x] Understanding yelp data
 
