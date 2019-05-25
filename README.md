@@ -3,6 +3,7 @@ IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
 - [ ] Create Our Yelp User csv from review.json
+- [ ] Project checkpoint 2
 ## ToDo
 - [ ] Create Our Yelp Photo csv from photo.json
 - [ ] Create Our Yelp Checkin csv from checkin.json
