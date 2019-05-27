@@ -2,7 +2,6 @@
 IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
-- [ ] Create Our Yelp User csv from review.json
 - [ ] Create Our Yelp Tips csv from tips.json
 - [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
 
