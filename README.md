@@ -27,6 +27,10 @@ IST718 Final Project for D &amp; R &amp; T
 * [yelp business csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/ouryelpbusinesses.csv)
 * [notebook for creating business csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpBusinesses.ipynb)
        
+- [x] Create Our Yelp Users csv from user.json and OurYelpReviews.csv
+* [Our Yelp Users csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
+* [notebook for making yelp users csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpUsers.ipynb)
+       
 - [x] Create Our Yelp Reviews csv from review.json and OurYelpBusiness.csv
 * [Our Yelp Reviews csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
 * [notebook for making yelp review csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpReviews.ipynb)
