@@ -6,7 +6,6 @@ IST718 Final Project for D &amp; R &amp; T
 - [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
 
 ## ToDo
-- [ ] Create Our Yelp Checkin csv from checkin.json
 - [ ] Check for possible integration of restaurant revenue information to our base data
 - [ ] Merge all yelp csv data into a single csv using their unique identifier. The final csv will  be used for EDA and Modeling
 - [ ] EDA
@@ -20,6 +19,10 @@ IST718 Final Project for D &amp; R &amp; T
        
 - [x] Understanding yelp data
 * [notebook for initial exploration](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DescribeYelpData.ipynb)
+
+- [x] Create Our Yelp Checkins csv from checkin.json
+* [Our Yelp Checkins csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
+* [notebook for creating checkins csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpCheckins.ipynb)
 
 - [x] Create Our Yelp Tips by User csv and Create Our Yelp Tips by Business csv from tip.json
 * [Our Yelp Tips by User csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
