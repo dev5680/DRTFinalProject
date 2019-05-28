@@ -2,11 +2,10 @@
 IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
-- [ ] Create Our Yelp Tips csv from tips.json
+- [ ] Create Our Yelp Photo csv from photo.json
 - [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
 
 ## ToDo
-- [ ] Create Our Yelp Photo csv from photo.json
 - [ ] Create Our Yelp Checkin csv from checkin.json
 - [ ] Check for possible integration of restaurant revenue information to our base data
 - [ ] Merge all yelp csv data into a single csv using their unique identifier. The final csv will  be used for EDA and Modeling
@@ -25,7 +24,7 @@ IST718 Final Project for D &amp; R &amp; T
 - [x] Create Our Yelp Tips by User csv and Create Our Yelp Tips by Business csv from tip.json
 * [Our Yelp Tips by User csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
 * [Our Yelp Tips by Business csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
-* [notebook for making yelp users csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpTips.ipynb)
+* [notebook for making yelp tips csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpTips.ipynb)
       
 - [x] Create Our Yelp Business csv from business.json
 * [yelp business csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/ouryelpbusinesses.csv)
