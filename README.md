@@ -2,7 +2,6 @@
 IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
-- [ ] Create Our Yelp Photo csv from photo.json
 - [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
 
 ## ToDo
@@ -19,6 +18,10 @@ IST718 Final Project for D &amp; R &amp; T
        
 - [x] Understanding yelp data
 * [notebook for initial exploration](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DescribeYelpData.ipynb)
+
+- [x] Create Our Yelp Photos csv from photo.json
+* [Our Yelp Photos csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
+* [notebook for creating photos csv](https://github.com/richpatanalytics/DRTFinalProject/blob/master/MakeOurYelpPhotos.ipynb)
 
 - [x] Create Our Yelp Checkins csv from checkin.json
 * [Our Yelp Checkins csv is in Watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/assets?context=wdp)
