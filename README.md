@@ -2,7 +2,6 @@
 IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
-- [ ] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
 
 ## ToDo
 - [ ] Check for possible integration of restaurant revenue information to our base data
@@ -63,3 +62,8 @@ IST718 Final Project for D &amp; R &amp; T
 * [Bernolli pickle model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-reviews.sav)
       
 * [Vectorizer for bernolli model](https://github.com/richpatanalytics/DRTFinalProject/blob/master/BNB-model-for-lie-detection-in-review-vectorizer.sav)
+
+- [x] Add Sentiment and Authenticity Columns  to Yelp Reviews csv and Use predictive model to populate the columns
+* [Notebook used in creating reviews sentiment label and review authenticity](https://github.com/richpatanalytics/DRTFinalProject/blob/master/DRT_Topic_Modeling.ipynb)
+* [Our Review CSV with Sentiment and Lie Label in watson](https://dataplatform.cloud.ibm.com/projects/d24d039e-b23d-44d8-9c5c-a3ac98951474/data-assets/bae12619-39d0-407f-81f8-4236e30bf216/preview?context=wdp&label=true)
+
