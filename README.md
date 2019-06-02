@@ -2,6 +2,7 @@
 IST718 Final Project for D &amp; R &amp; T
 # Storyboard
 ## In Progress
+- [ ] Exploring business categories by reviews and sentiment labels based on business location
 
 ## ToDo
 - [ ] Check for possible integration of restaurant revenue information to our base data
