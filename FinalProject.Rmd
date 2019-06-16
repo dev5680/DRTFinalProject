@@ -1,0 +1,578 @@
+---
+title: "IST718"
+author: "Debasis Chatterjee"
+date: "June 8, 2019"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+#chooseCRANmirror(graphics=FALSE, ind=1)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Load Libraries
+
+```{r}
+library(tidyverse) #  data manipulation and graphs
+library(stringr) #  string manipulation
+library(lubridate) #  date manipulation
+library('wordcloud') #  wordcloud
+library(tidytext) # tidy implementation of NLP methods
+library(DT)       # table format display of data
+library(leaflet) # maps
+
+library(igraph) #  graphs
+library(ggraph) #  graphs
+
+library(topicmodels) # for LDA topic modelling 
+library(tm) # general text mining functions, making document term matrixes
+library(SnowballC) # for stemming
+
+library(textcat)
+
+library(dplyr)
+library(data.table)
+```
+
+
+```{r}
+rm(list=ls())
+fillColor = "#FFA07A"
+fillColor2 = "#F1C40F"
+```
+
+##Read the business data
+```{r}
+#business_raw <- read.csv(file="yelp_business.csv", header=TRUE, sep=",")
+business_raw <- fread(file="yelp_business.csv")
+business <- business_raw
+
+```
+
+#Business data
+```{r}
+target <- c("NV", "AZ")
+business = business %>% filter(state %in% target)
+datatable(head(business), style="bootstrap", class="table-condensed", options = list(dom = 'tp',scrollX = TRUE))
+```
+#Most Popular Categories
+
+The most popular categories of business are plotted in the bar plot    
+
+```{r}
+categories = str_split(business$categories,";")
+categories = as.data.frame(unlist(categories))
+colnames(categories) = c("Name")
+
+categories %>%
+  group_by(Name) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  ungroup() %>%
+  mutate(Name = reorder(Name,Count)) %>%
+  head(10) %>%
+  
+  
+  ggplot(aes(x = Name,y = Count)) +
+  geom_bar(stat='identity',colour="white", fill =fillColor2) +
+  geom_text(aes(x = Name, y = 1, label = paste0("(",Count,")",sep="")),
+            hjust=0, vjust=.5, size = 4, colour = 'black',
+            fontface = 'bold') +
+  labs(x = 'Name of Category', y = 'Count', 
+       title = 'Top 10 Categories of Business') +
+  coord_flip() + 
+  theme_bw()
+```
+
+#Top Ten Cities with the most Business parties mentioned in Yelp
+
+We show the Top Ten Cities which has the most Business parties mentioned in Yelp
+
+```{r}
+business %>%
+  group_by(city) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  ungroup() %>%
+  mutate(City = reorder(city,Count)) %>%
+  head(10) %>%
+  
+  ggplot(aes(x = City,y = Count)) +
+  geom_bar(stat='identity',colour="white", fill =fillColor) +
+  geom_text(aes(x = City, y = 1, label = paste0("(",round(Count/1e3)," K )",sep="")),
+            hjust=0, vjust=.5, size = 4, colour = 'black',
+            fontface = 'bold') +
+  labs(x = 'City', y = 'Count of Reviews', 
+       title = 'Top Ten Cities with the most Business parties in Yelp') +
+  coord_flip() + 
+  theme_bw()
+```
+#Map of the business parties in Nevada
+
+Seems from the map that most of the business is in the neighborhood of **The Strip** in Las Vagas.
+
+From Wikipedia
+
+> The Las Vegas Strip is a stretch of South Las Vegas Boulevard in Clark County, Nevada that is known for its concentration of resort hotels and casinos. The Strip is approximately 4.2 miles (6.8 km) in length,[1] located immediately south of the Las Vegas city limits in the unincorporated towns of Paradise and Winchester.
+
+```{r}
+NavadaCoords = business %>% filter(state == "NV")
+
+center_lon = median(NavadaCoords$longitude,na.rm = TRUE)
+center_lat = median(NavadaCoords$latitude,na.rm = TRUE)
+
+leaflet(NavadaCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(review_count))  %>%
+  
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+
+#Map of the business parties in Arizona
+```{r}
+#business_resturant_NV = business %>% filter(categories %in% target)
+business_resturant_NV_AZ = dplyr::filter(business, grepl('Restaurants', categories))
+```
+
+```{r}
+#library("xlsx")
+# Write the first data set in a new workbook
+#write.xlsx(business_resturant_NV_AZ, file = "restaurant_NV_AZ.xlsx",
+#      sheetName = "USA-RESTURANTS", append = FALSE)
+write.csv(business_resturant_NV_AZ, file = "restaurant_NV_AZ.csv")
+```
+
+```{r}
+business_resturant_NVCoords = business_resturant_NV_AZ %>% filter(state == "NV")
+
+center_lon = median(business_resturant_NVCoords$longitude,na.rm = TRUE)
+center_lat = median(business_resturant_NVCoords$latitude,na.rm = TRUE)
+
+leaflet(business_resturant_NVCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars>=4))  %>%
+  
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+  
+
+
+```{r}
+ArizonaCoords = business %>% filter(state == "AZ")
+
+center_lon = median(ArizonaCoords$longitude,na.rm = TRUE)
+center_lat = median(ArizonaCoords$latitude,na.rm = TRUE)
+
+leaflet(ArizonaCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(review_count))  %>%
+  
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+
+```
+
+```{r}
+business_resturant_NVCoords = business_resturant_NV_AZ %>% filter(state == "AZ")
+
+center_lon = median(business_resturant_NVCoords$longitude,na.rm = TRUE)
+center_lat = median(business_resturant_NVCoords$latitude,na.rm = TRUE)
+
+leaflet(business_resturant_NVCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars>=4))  %>%
+  
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+
+###Read the review data
+
+```{r}
+#reviews_raw <- read.csv(file="yelp_review.csv", header=TRUE, sep=",")
+#reviews <- reviews_raw
+
+#con <- file(description = "yelp_review.csv", open = "r")
+#reviews_raw <- read.table(con, header = T, fill = TRUE, sep = ",")
+#reviews <- reviews_raw
+
+reviews_raw <- fread("yelp_review.csv")
+reviews <- reviews_raw
+```
+
+
+```{r,message=FALSE,warning=FALSE}
+#datatable(head(reviews), style="bootstrap", class="table-condensed", options = list(dom = 'tp',scrollX = TRUE))
+```
+
+#Reviews data
+
+A glimpse of the reviews data
+```{r}
+glimpse(reviews)
+```
+#Detecting the language of the reviews
+
+Detecting the language of the first Ten reviews.
+```{r}
+textcat(reviews[1:10,]$text)
+```
+#Business with most Five Star Reviews from Users
+
+The following plot shows the names of business with the most Five Star Reviews.**Mon Ami Gabi**  and **Bacchanal Buffet** are the Two most popular restaurants from the Yelp reviews with **Five Star** ratings. We will do a deep dive for these restaurants.
+```{r}
+most5StarsReviews = reviews %>%
+  filter(stars == 5) %>%
+  group_by(business_id) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  ungroup() %>%
+  mutate(BusinessID = reorder(business_id,Count)) %>%
+  head(10)
+```
+
+```{r}
+most5StarsReviews = inner_join(most5StarsReviews,business)
+```
+
+```{r}
+most5StarsReviews %>%
+  mutate(name = reorder(name,Count)) %>%
+  ggplot(aes(x = name,y = Count)) +
+  geom_bar(stat='identity',colour="white", fill = fillColor) +
+  geom_text(aes(x = name, y = 1, label = paste0("(",Count,")",sep="")),
+            hjust=0, vjust=.5, size = 4, colour = 'black',
+            fontface = 'bold') +
+  labs(x = 'Name of the Business', 
+       y = 'Count', 
+       title = 'Name of the Business and Count') +
+  coord_flip() +
+  theme_bw()
+```
+
+#**"Mon Ami Gabi"**
+
+The location and category of the most liked business **Mon Ami Gabi** is shown below            
+
+```{r,message=FALSE,warning=FALSE}
+
+mon_ami_gabi = business %>% filter(business_id == "4JNXUYY8wbaaDmk3BPzlWw") %>%
+  select(name,neighborhood,city,state,postal_code,categories)
+
+datatable(head(mon_ami_gabi), style="bootstrap", class="table-condensed", options = list(dom = 'tp',scrollX = TRUE))
+
+```
+##Useful,funny,cool reviews
+
+The following plot describes the number of **Useful, Funny and Cool** reviews.Most of the reviews are NOT useful , funny or cool.      
+
+```{r,message=FALSE,warning=FALSE}
+
+mon_ami_gabi_reviews = reviews %>%
+  filter(business_id == "4JNXUYY8wbaaDmk3BPzlWw")
+
+mon_ami_gabi_reviews %>%
+  group_by(useful) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  ungroup() %>%
+  mutate(useful = reorder(useful,Count)) %>%
+  head(10) %>%
+  
+  ggplot(aes(x = useful,y = Count)) +
+  geom_bar(stat='identity',colour="white", fill = fillColor) +
+  geom_text(aes(x = useful, y = 1, label = paste0("(",Count,")",sep="")),
+            hjust=0, vjust=.5, size = 4, colour = 'black',
+            fontface = 'bold') +
+  labs(x = 'Useful Reviews', 
+       y = 'Count', 
+       title = 'Useful Reviews and Count') +
+  coord_flip() +
+   theme_bw()
+
+
+mon_ami_gabi_reviews %>%
+  group_by(funny) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  ungroup() %>%
+  mutate(funny = reorder(funny,Count)) %>%
+  head(10) %>%
+  
+  ggplot(aes(x = funny,y = Count)) +
+  geom_bar(stat='identity',colour="white", fill = fillColor2) +
+  geom_text(aes(x = funny, y = 1, label = paste0("(",Count,")",sep="")),
+            hjust=0, vjust=.5, size = 4, colour = 'black',
+            fontface = 'bold') +
+  labs(x = 'Funny Reviews', 
+       y = 'Count', 
+       title = 'Funny Reviews and Count') +
+  coord_flip() +
+   theme_bw()
+
+
+mon_ami_gabi_reviews %>%
+  group_by(cool) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count)) %>%
+  ungroup() %>%
+  mutate(cool = reorder(cool,Count)) %>%
+  head(10) %>%
+  
+  ggplot(aes(x = cool,y = Count)) +
+  geom_bar(stat='identity',colour="white", fill = fillColor) +
+  geom_text(aes(x = cool, y = 1, label = paste0("(",Count,")",sep="")),
+            hjust=0, vjust=.5, size = 4, colour = 'black',
+            fontface = 'bold') +
+  labs(x = 'Cool Reviews', 
+       y = 'Count', 
+       title = 'Cool Reviews and Count') +
+  coord_flip() +
+   theme_bw()
+```
+
+## Word Cloud of Mon Ami Gabi
+
+A word cloud is a graphical representation of frequently used words in the text. The height of each word in this picture is an indication of frequency of occurrence of the word in the entire text. The words `steak, service, vegas,french,patio,bellagio,delicious, nice` are the words which have been used very frequently in the **reviews**.Note that if we choose a word which is not food related , it is **Service** and we will see in the subsequent sections of `sentiment analysis` and `topic modelling` , why this `keyword` is important.       
+```{r}
+
+#createWordCloud = function(train)
+#{
+ # train %>%
+#  unnest_tokens(word, text) %>%
+#  filter(!word %in% stop_words$word) %>%
+#  count(word,sort = TRUE) %>%
+#  ungroup()  %>%
+#  head(30) %>%
+  
+#  with(wordcloud(word, n, max.words = 30,colors=brewer.pal(8, "Dark2")))
+#}
+```
+
+```{r}
+#createWordCloud(reviews %>%
+#  filter(business_id == "4JNXUYY8wbaaDmk3BPzlWw"))
+```
+
+```{r}
+library(gdata) 
+library(ggplot2)
+library(openintro) 
+library(ggmap)
+library(readxl)
+library(sqldf)
+library(zipcode)
+```
+
+```{r}
+#1. Read the data
+df <- read_xlsx("MedianZIP.xlsx")
+head(df)
+str(df)
+#View(df)
+#2. Clean up the dataframe
+#2a. Remove unneeded information
+df <- df[-1,]
+#2b. Update column names (zip, median, mean, population)
+colnames(df) <- c("zip","median","mean","population")
+#remove commas and make numeric
+df$median <- as.numeric(gsub(",", "", df$median))
+df$mean <- as.numeric(gsub(",", "", df$mean))
+df$population <- as.numeric(gsub(",", "", df$population))
+
+#3. Load the 'zipcode' package
+data(zipcode)
+df$zip <- clean.zipcodes(df$zip) #reformat the zip codes
+
+#4. Merge the zip code information from two data frames
+dfNew <- merge(df, zipcode, by ="zip")
+head(dfNew)
+
+#5. Remove Hawaii and Alaska
+dfNew <- dfNew[dfNew$state != "HI", ]
+dfNew <- dfNew[dfNew$state != "AK", ]
+dfNew <- dfNew[dfNew$state != "DC", ]
+
+#Step	2: Show	the	income	&	population	per	state
+#  1) Create	a	simpler	dataframe,	with	just	the	average	median	income	and	the	the	population	for	each	state.
+#  2) Add	the	state	abbreviations	and	the	state	names	as	new	columns	(make	sure	the	state	names	are	all	lower	case)
+#  3) Show	the	U.S.	map,	representing	the	color	with	the	average	median	income	of	that state
+#  4) Create	a	second	map	with	color	representing	the	population	of	the	state
+#Create a simpler dataframe with median income and population
+income <- tapply(dfNew$median, dfNew$state, mean)
+state <- rownames(income)
+medianIncome <- data.frame(state, income)
+
+pop <- tapply(dfNew$population, dfNew$state, sum)
+state <- rownames(pop)
+statePop <- data.frame(state,pop)
+
+dfSimple <- merge(medianIncome, statePop, by="state")
+head(dfSimple)
+
+# previous steps can be done using sql instead and scaling the income at the state level
+dfSimple<- sqldf("select state, avg(median) as income, sum(population) as pop from dfNew group by state")
+dfSimple<- sqldf("select state, (income/pop) as income, pop from dfSimple")
+
+head(dfSimple)
+
+#Add state abbreviations and state names (lower case)
+#use match(dfSimple$state,state.abb)
+dfSimple$stateName <- state.name[match(dfSimple$state,state.abb)]
+#convert to lower case
+dfSimple$stateName <- tolower(dfSimple$stateName)
+
+#Show us map, representing color with average median income
+us <- map_data("state")
+#Function To remove axis formats from the heatmaps
+ditch_the_axes <- theme(
+  axis.text = element_blank(),
+  axis.line = element_blank(),
+  axis.ticks = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.title = element_blank()
+)
+```
+# Show	the	U.S.	map,	representing	the	color	with	the	average	median	income	of	that state
+
+```{r}
+MapIncome <- ggplot(dfSimple, aes(map_id=stateName))
+MapIncome <- MapIncome + geom_map(map=us, aes(fill=dfSimple$income))
+MapIncome <- MapIncome + expand_limits(x=us$long, y=us$lat)
+
+MapIncome <- MapIncome + coord_map()
+MapIncome <- MapIncome + ggtitle("average median income by state") + theme(plot.title = element_text(hjust=0.5))
+MapIncome <- MapIncome + guides(fill=guide_legend(title="Income")) + ditch_the_axes
+MapIncome
+```
+
+```{r}
+# Create	a	second	map	with	color	representing	the	population	of	the	state
+MapPopulation <- ggplot(dfSimple, aes(map_id=stateName))
+MapPopulation <- MapPopulation + geom_map(map=us, aes(fill=dfSimple$pop))
+MapPopulation <- MapPopulation + expand_limits(x=us$long, y=us$lat)
+
+MapPopulation <- MapPopulation + coord_map()
+MapPopulation <- MapPopulation + ggtitle("Population by state") + theme(plot.title = element_text(hjust=0.5))
+MapPopulation <- MapPopulation + guides(fill=guide_legend(title="Population")) + ditch_the_axes
+MapPopulation
+```
+
+#Step	3:	Show	the	income	per	zip	code
+#  1) Have	draw	each	zip	code	on	the	map,	 where	the	color	of	the	'dot'	is	based	on	the	median	income.	To	make	the	map	look	appealing,	
+#   have	the	background	of	the	map be	black.
+
+
+# Draw each zip code on map where color of dot is based on median income
+
+```{r}
+dfNew$stateName <- state.name[match(dfNew$state,state.abb)]
+dfNew$stateName <- tolower(dfNew$stateName)
+
+MapZip <- ggplot(dfNew, aes(map_id=stateName))
+MapZip <- MapZip + geom_map(map=us, fill="black", color="white")
+MapZip <- MapZip + expand_limits(x=us$long, y=us$lat)
+
+MapZip <- MapZip + geom_point(data=dfNew, aes(x=dfNew$longitude, y=dfNew$latitude, color=dfNew$median))
+
+MapZip <- MapZip + coord_map()
+MapZip <- MapZip + ggtitle("income per zip code") + theme(plot.title=element_text(hjust=0.5))
+MapZip <- MapZip  + ditch_the_axes
+MapZip
+head(dfNew)
+```  
+#Step	4:	Show	Zip	Code	Density
+#  1) Now	generate	a	different	map,	one	where	we	can	easily	see	where	there	are	lots	of zip	codes,	and	where	there	are	few	(using	the	'stat_density2d'	function).
+
+# Generate a map showing density of zip codes
+```{r}
+MapDensity <- ggplot(dfNew, aes(map_id=stateName))
+MapDensity <- MapDensity + geom_map(map=us, fill="black", color="white")
+
+MapDensity <- MapDensity + expand_limits(x=us$long, y=us$lat)
+
+MapDensity <- MapDensity + stat_density_2d(data=dfNew, aes(x=dfNew$longitude, y=dfNew$latitude))
+
+MapDensity <- MapDensity + coord_map()
+MapDensity <- MapDensity + ggtitle("zip code density") + theme(plot.title=element_text(hjust=0.5))
+MapDensity
+```
+#Step	5:	Zoom	in	to	the	region	around	Nevada
+#  1) Repeat	steps	3	&	4,	but	have	the	image	/	map	be	of	the	northeast	U.S.	(centered	around	Vegas).
+```{r}
+zoomGeo <- geocode("Las Vegas, NV", source = "dsk")
+zoomAmount <- 10
+
+centerx <- zoomGeo$lon
+centery <- zoomGeo$lat
+
+ylimit <- c(centery-zoomAmount, centery+zoomAmount)
+xlimit <- c(centerx-zoomAmount, centerx+zoomAmount)
+
+#Show income per zip code around Vegas
+MapZipZoom <- MapZip + xlim(xlimit) + ylim(ylimit) + coord_map()
+
+MapZipZoom <- MapZipZoom + geom_point(aes(x=centerx, y=centery), color="darkred", size=3)
+
+MapZipZoom <- MapZipZoom + ggtitle("Income by Zip around Vegas ") + theme(plot.title=element_text(hjust=0.5))
+MapZipZoom
+
+zoomGeo <- geocode("Phoenix, AZ", source = "dsk")
+zoomAmount <- 10
+
+centerx <- zoomGeo$lon
+centery <- zoomGeo$lat
+
+ylimit <- c(centery-zoomAmount, centery+zoomAmount)
+xlimit <- c(centerx-zoomAmount, centerx+zoomAmount)
+
+#Show income per zip code around Phoenix
+MapZipZoom <- MapZip + xlim(xlimit) + ylim(ylimit) + coord_map()
+
+MapZipZoom <- MapZipZoom + geom_point(aes(x=centerx, y=centery), color="darkred", size=3)
+
+MapZipZoom <- MapZipZoom + ggtitle("Income by Zip around Phoenix ") + theme(plot.title=element_text(hjust=0.5))
+MapZipZoom
+
+```
+
+
+```{r}
+#devtools::install_github("UrbanInstitute/urbnmapr")
+```
+#house ownership rate
+
+```{r}
+#devtools::install_github("UI-Research/urbnthemes")
+```
+
+```{r}
+#library(urbnmapr)
+#library(urbnthemes)
+#library(geojsonio)
+#library(rmapshaper)
+#library(sp)
+```
+
+```{r}
+library(urbnmapr)
+library(urbnthemes)
+set_urbn_defaults(style = "map")
+```
+
+```{r}
+states_sf <- get_urbn_map(map = "states", sf = TRUE)
+
+statedata %>% 
+  left_join(states_sf, by = "state_name") %>% 
+  ggplot() +
+  geom_sf(mapping = aes(fill = horate),
+          color = "#ffffff", size = 0.25) +
+  scale_fill_gradientn(labels = scales::percent) +
+  labs(fill = "Homeownership rate") +
+  coord_sf(datum = NA)
+```
+
+
