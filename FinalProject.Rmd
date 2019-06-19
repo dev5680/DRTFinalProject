@@ -151,14 +151,84 @@ business_resturant_NVCoords = business_resturant_NV_AZ %>% filter(state == "NV")
 center_lon = median(business_resturant_NVCoords$longitude,na.rm = TRUE)
 center_lat = median(business_resturant_NVCoords$latitude,na.rm = TRUE)
 
-leaflet(business_resturant_NVCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
-  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars>=4))  %>%
-  
+NVView1 <- leaflet(business_resturant_NVCoords) %>% 
+addProviderTiles("Esri.NatGeoWorldMap") %>%
+addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars>=4), color = c('blue'))  %>%
+#addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars==5), color = c('red'))  %>%
+#addMarkers(lat= ~latitude, lng= ~longitude, popup = ) %>%
   # controls
   setView(lng=center_lon, lat=center_lat,zoom = 13)
 ```
   
+```{r}
+business_resturant_NVCoords <- business_resturant_NVCoords[order(-business_resturant_NVCoords$review_count),]
+business_resturant_NVCoords_top30 <- business_resturant_NVCoords[1:30,]
+NVView2 <- leaflet(business_resturant_NVCoords_top30) %>% 
+addProviderTiles("Esri.NatGeoWorldMap") %>%
+addCircles(lng = ~longitude, lat = ~latitude,radius = ~business_resturant_NVCoords_top30$review_count/20, color = c('blue'))  %>%
+#addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars==5), color = c('red'))  %>%
+#addMarkers(lat= ~latitude, lng= ~longitude, popup = ) %>%
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
 
+
+```{r}
+library(readxl)
+df <- read_xlsx("RestaurantCountByZipcode.xlsx")
+#3. Load the 'zipcode' package
+data(zipcode)
+df$zip <- clean.zipcodes(df$zip) #reformat the zip codes
+#4. Merge the zip code information from two data frames
+dfNew <- merge(df, zipcode, by ="zip")
+
+dfNew_NVCoords = dfNew %>% filter(state == "NV")
+
+center_lon = median(dfNew_NVCoords$longitude,na.rm = TRUE)
+center_lat = median(dfNew_NVCoords$latitude,na.rm = TRUE)
+
+NVView2 <- leaflet(dfNew_NVCoords) %>% 
+  addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(restcount), color = c('red'))  %>%
+  addTiles() %>% addMarkers(clusterOptions = markerClusterOptions(spiderLegPolylineOptions = list(weight=1.5))) %>%
+  
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+
+
+```{r}
+leaflet(dfNew_NVCoords) %>%
+  addTiles() %>%
+  addCircleMarkers(data = dfNew_NVCoords,
+    color = '#FA5',
+    opacity = 1,
+    clusterOptions = markerClusterOptions(iconCreateFunction = JS("function (cluster) {    
+      var childCount = cluster.getChildCount(); 
+      var c = ' marker-cluster-';  
+      if (childCount < 2) {  
+        c += 'small';  
+      } else if (childCount < 5) {  
+        c += 'medium';  
+      } else { 
+        c += 'large';  
+      }    
+      return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', 
+      className: 'marker-cluster' + c, iconSize: new L.Point(1, 1) });
+
+    }"))) %>%
+    setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+
+
+```{r}
+library(ggmap)
+library(mapview)#depricated
+library(leafsync)
+library(raster)
+library(magrittr)
+leafsync::latticeView(NVView1,NVView2, ncol = 2, sync = list(c(1, 2)), sync.cursor = FALSE, no.initial.sync = FALSE)
+```
 
 ```{r}
 ArizonaCoords = business %>% filter(state == "AZ")
@@ -175,17 +245,63 @@ leaflet(ArizonaCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
 ```
 
 ```{r}
-business_resturant_NVCoords = business_resturant_NV_AZ %>% filter(state == "AZ")
+business_resturant_AZCoords = business_resturant_NV_AZ %>% filter(state == "AZ")
 
-center_lon = median(business_resturant_NVCoords$longitude,na.rm = TRUE)
-center_lat = median(business_resturant_NVCoords$latitude,na.rm = TRUE)
+center_lon = median(business_resturant_AZCoords$longitude,na.rm = TRUE)
+center_lat = median(business_resturant_AZCoords$latitude,na.rm = TRUE)
 
-leaflet(business_resturant_NVCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
-  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars>=4))  %>%
+AZView1 <- leaflet(business_resturant_AZCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars>=4), color = c('blue'))  %>%
   
   # controls
   setView(lng=center_lon, lat=center_lat,zoom = 13)
 ```
+
+```{r}
+business_resturant_AZCoords <- business_resturant_AZCoords[order(-business_resturant_AZCoords$review_count),]
+business_resturant_AZCoords_top30 <- business_resturant_AZCoords[1:30,]
+AZView2 <- leaflet(business_resturant_AZCoords_top30) %>% 
+addProviderTiles("Esri.NatGeoWorldMap") %>%
+addCircles(lng = ~longitude, lat = ~latitude,radius = ~business_resturant_AZCoords_top30$review_count, color = c('red'))  %>%
+#addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(stars==5), color = c('red'))  %>%
+#addMarkers(lat= ~latitude, lng= ~longitude, popup = ) %>%
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+
+
+
+```{r}
+library(readxl)
+df <- read_xlsx("RestaurantCountByZipcode.xlsx")
+#3. Load the 'zipcode' package
+data(zipcode)
+df$zip <- clean.zipcodes(df$zip) #reformat the zip codes
+#4. Merge the zip code information from two data frames
+dfNew <- merge(df, zipcode, by ="zip")
+
+dfNew_AZCoords = dfNew %>% filter(state == "AZ")
+
+center_lon = median(dfNew_AZCoords$longitude,na.rm = TRUE)
+center_lat = median(dfNew_AZCoords$latitude,na.rm = TRUE)
+
+AZView2 <- leaflet(dfNew_AZCoords) %>% addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addCircles(lng = ~longitude, lat = ~latitude,radius = ~sqrt(restcount), color = c('red'))  %>%
+  
+  # controls
+  setView(lng=center_lon, lat=center_lat,zoom = 13)
+```
+
+
+```{r}
+library(ggmap)
+library(mapview)#depricated
+library(leafsync)
+library(raster)
+library(magrittr)
+leafsync::latticeView(AZView1,AZView2, ncol = 2, sync = list(c(1, 2)), sync.cursor = FALSE, no.initial.sync = FALSE)
+```
+
 
 ###Read the review data
 
